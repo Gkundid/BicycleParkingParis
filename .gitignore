@@ -1,0 +1,42 @@
+# Fichiers et dossiers de l'environnement virtuel Python
+venv/
+*.pyc
+__pycache__/
+
+# Dossiers node_modules pour JavaScript/Node.js
+node_modules/
+
+# Fichiers de configuration environnementale
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Fichiers de cache et logs
+.cache/
+.pycache/
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.seed
+*.db
+
+# Dossiers et fichiers de l'éditeur
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Fichiers et dossiers générés par l'OS
+.DS_Store
+Thumbs.db
+
+# Dossiers et fichiers de build / dist
+/dist
+/build
+/out
+
+# Autres fichiers et dossiers spécifiques au projet à ignorer
+# Ajoutez ici selon les besoins
