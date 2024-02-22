@@ -35,14 +35,3 @@ Ce projet nécessite Python et Node.js. Voici comment configurer votre environne
     ```bash
     npm install neo4j-driver
     ```
-
-
-### Frontend (Node.js)
-
-1. Assurez-vous d'avoir Node.js et npm installés.
-
-2. Installez les dépendances du projet :
-    ```bash
-    cd frontend
-    npm install
-    ```
