@@ -2,8 +2,10 @@ from flask import Flask, request, jsonify
 import os
 import dotenv
 from neo4j import GraphDatabase
-
+from flask_cors import CORS
+ 
 app = Flask(__name__)
+CORS(app)
 
 # Get current directory
 current_directory = os.path.dirname(os.path.abspath(__file__))
@@ -58,6 +60,7 @@ def search_parking():
     try:
         results = neo4j_conn.execute_query(query, parameters={'lat': lat, 'lon': lon})
         # Adjusting the return statement to match the structure of the results
+        print(results)
         return jsonify([{"id": record["p.ID"], "lat": record["p.Latitude"], "lon": record["p.Longitude"], "capacity": record["p.Capacity"]} for record in results])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
