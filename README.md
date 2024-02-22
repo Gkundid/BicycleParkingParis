@@ -1,37 +1,42 @@
 # Bicycle Parking in Paris 
 
-## Configuration de l'Environnement de Développement
+## Configuring the Development Environment
 
-Ce projet nécessite Python et Node.js. Voici comment configurer votre environnement de développement.
+This project requires Python. Here's how to configure your development environment.
 
-### Backend (Python)
+1. Make sure you have Python installed on your machine. This project uses Python 3.8+.
 
-1. Assurez-vous d'avoir Python installé sur votre machine. Ce projet utilise Python 3.8+.
-
-2. Créez un environnement virtuel dans le dossier backend (à la racine):
+2. Create a virtual environment.
     ```bash
     python -m venv .venv
     ```
 
-3. Activez l'environnement virtuel :
-    - Sur Windows :
+3. Activate the virtual environment :
+    - On Windows :
         ```bash
         .\.venv\Scripts\activate
         ```
-    - Sur macOS et Linux :
+    - On macOS and Linux :
         ```bash
         source .venv/bin/activate
         ```
 
-4. Installez les dépendances nécessaires :
+4. Install the necessary dependencies :
     ```bash
-    pip install requests pandas neo4j
-    pip install flask
-    pip install python-dotenv
-    pip install neo4j
+    pip install -r requirements.txt
     ```
 
-5. Installez le pilote de Neo4j 
+
+## Run 
+
+1. Go in frontend/  
     ```bash
-    npm install neo4j-driver
+    http-server 
     ```
+
+2. Go in backend/
+    ```bash
+    python server.py
+    ```
+
+3. Test on http://localhost:8080
