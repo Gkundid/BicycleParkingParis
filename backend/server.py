@@ -11,16 +11,16 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 # Complete path directory for file configuration
 config_file_path = os.path.join(current_directory, "Credentials-Neo4j-Instance.txt")
 
-# Chargez les variables d'environnement à partir du fichier de configuration
+# Load environment variables from the configuration file
 load_status = dotenv.load_dotenv(config_file_path)
 if load_status is False:
     raise RuntimeError('Environment variables not loaded.')
 
-# Obtenez les variables d'environnement nécessaires pour la connexion
+# Get the necessary environment variables for connection
 URI = os.getenv("NEO4J_URI")
 AUTH = (os.getenv("NEO4J_USERNAME"), os.getenv("NEO4J_PASSWORD"))
 
-# Classe pour gérer la connexion Neo4j
+# Class to manage Neo4j connection
 class Neo4jConnection:
     def __init__(self):
         self.__driver = None
@@ -47,14 +47,18 @@ def search_parking():
     lat = request.args.get('lat', type=float)
     lon = request.args.get('lon', type=float)
     
-    # Exemple de requête Cypher, à remplacer par votre requête spécifique
+    # Updated Cypher query with type conversion
     query = """
-    MATCH (p:Parking) WHERE distance(p.location, point({latitude: $lat, longitude: $lon})) < 1000
-    RETURN p ORDER BY distance(p.location, point({latitude: $lat, longitude: $lon})) ASC LIMIT 5
+    MATCH (p:ParkingVelo)
+    WHERE point.distance(point({latitude: toFloat(p.Latitude), longitude: toFloat(p.Longitude)}), point({latitude: $lat, longitude: $lon})) < 1000
+    RETURN p.ID, p.Latitude, p.Longitude, p.Capacity
+    ORDER BY point.distance(point({latitude: toFloat(p.Latitude), longitude: toFloat(p.Longitude)}), point({latitude: $lat, longitude: $lon})) ASC
+    LIMIT 5
     """
     try:
         results = neo4j_conn.execute_query(query, parameters={'lat': lat, 'lon': lon})
-        return jsonify([{"lat": record["p"]["latitude"], "lon": record["p"]["longitude"]} for record in results])
+        # Adjusting the return statement to match the structure of the results
+        return jsonify([{"id": record["p.ID"], "lat": record["p.Latitude"], "lon": record["p.Longitude"], "capacity": record["p.Capacity"]} for record in results])
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
