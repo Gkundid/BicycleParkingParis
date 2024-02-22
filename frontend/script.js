@@ -6,6 +6,18 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 var marker;
 
+// Fonction pour envoyer des coordonnées au serveur backend
+function sendCoordinatesToServer(lat, lng) {
+    axios.post('/api/parking/search', { lat: lat, lng: lng })
+        .then(function(response) {
+            console.log('Parking locations received:', response.data);
+            // Ici, vous pouvez traiter la réponse et ajouter des marqueurs rouges sur la carte
+        })
+        .catch(function(error) {
+            console.error('Error fetching parking locations:', error);
+        });
+}
+
 document.getElementById('submitAddress').addEventListener('click', function() {
     var address = document.getElementById('address').value;
     var photonAPI = "https://photon.komoot.io/api/?q=" + encodeURIComponent(address);
@@ -14,23 +26,18 @@ document.getElementById('submitAddress').addEventListener('click', function() {
         .then(function (response) {
             if(response.data.features.length > 0) {
                 var coords = response.data.features[0].geometry.coordinates;
-                var nominatimAPI = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords[1]}&lon=${coords[0]}&zoom=18&addressdetails=1`;
+                map.setView([coords[1], coords[0]], 13);
+                if (marker) {
+                    map.removeLayer(marker);
+                }
+                marker = L.marker([coords[1], coords[0]]).addTo(map)
+                    .bindPopup('Votre position')
+                    .openPopup();
 
-                axios.get(nominatimAPI).then(function(nominatimResponse) {
-                    var addressDetails = nominatimResponse.data.address;
-                    var formattedAddress = `${addressDetails.road || ''}, ${addressDetails.house_number || ''}, ${addressDetails.postcode || ''} ${addressDetails.city || ''}, ${addressDetails.country || ''}`;
-                    map.setView([coords[1], coords[0]], 13);
-                    if (marker) {
-                        map.removeLayer(marker);
-                    }
-                    marker = L.marker([coords[1], coords[0]]).addTo(map)
-                        .bindPopup(formattedAddress)
-                        .openPopup();
-                }).catch(function(nominatimError) {
-                    console.log(nominatimError);
-                });
+                // Envoyer les coordonnées au serveur après conversion d'adresse
+                sendCoordinatesToServer(coords[1], coords[0]);
             } else {
-                alert("Adress not found.");
+                alert("Adresse non trouvée.");
             }
         })
         .catch(function (error) {
@@ -44,24 +51,17 @@ document.getElementById('submitCoordinates').addEventListener('click', function(
     var lng = parseFloat(coordsInput[1].trim());
 
     if (!isNaN(lat) && !isNaN(lng)) {
-        var nominatimAPI = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
+        map.setView([lat, lng], 13);
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup('Votre position')
+            .openPopup();
 
-        axios.get(nominatimAPI)
-            .then(function(response) {
-                var addressDetails = response.data.address;
-                var formattedAddress = `${addressDetails.road || ''}, ${addressDetails.house_number || ''}, ${addressDetails.postcode || ''} ${addressDetails.city || ''}, ${addressDetails.country || ''}`;
-                map.setView([lat, lng], 13);
-                if (marker) {
-                    map.removeLayer(marker);
-                }
-                marker = L.marker([lat, lng]).addTo(map)
-                    .bindPopup(formattedAddress)
-                    .openPopup();
-            })
-            .catch(function(error) {
-                console.log(error);
-            });
+        // Envoyer directement les coordonnées au serveur
+        sendCoordinatesToServer(lat, lng);
     } else {
-        alert("Invalid coordinates.");
+        alert("Coordonnées invalides.");
     }
 });
