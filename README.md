@@ -26,16 +26,14 @@ Ce projet nécessite Python et Node.js. Voici comment configurer votre environne
 4. Installez les dépendances nécessaires :
     ```bash
     pip install requests pandas neo4j
+    pip install flask
+    pip install python-dotenv
+    pip install neo4j
     ```
 
 5. Installez le pilote de Neo4j 
     ```bash
     npm install neo4j-driver
-    ```
-
-6. Installez Express et body-parser
-    ```bash
-    npm install express body-parser
     ```
 
 
