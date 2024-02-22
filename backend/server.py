@@ -5,29 +5,32 @@ from neo4j import GraphDatabase
 
 app = Flask(__name__)
 
-# Chemin vers le fichier de configuration pour les credentials Neo4j
-dotenv_path = os.path.join(os.path.dirname(__file__), 'Credentials-Neo4j-Instance.txt')
-dotenv.load_dotenv(dotenv_path)
+# Get current directory
+current_directory = os.path.dirname(os.path.abspath(__file__))
 
-# Paramètres de connexion Neo4j
+# Complete path directory for file configuration
+config_file_path = os.path.join(current_directory, "Credentials-Neo4j-Instance.txt")
+
+# Chargez les variables d'environnement à partir du fichier de configuration
+load_status = dotenv.load_dotenv(config_file_path)
+if load_status is False:
+    raise RuntimeError('Environment variables not loaded.')
+
+# Obtenez les variables d'environnement nécessaires pour la connexion
 URI = os.getenv("NEO4J_URI")
-USERNAME = os.getenv("NEO4J_USERNAME")
-PASSWORD = os.getenv("NEO4J_PASSWORD")
+AUTH = (os.getenv("NEO4J_USERNAME"), os.getenv("NEO4J_PASSWORD"))
 
 # Classe pour gérer la connexion Neo4j
 class Neo4jConnection:
-    def __init__(self, uri, user, pwd):
-        self.__uri = uri
-        self.__user = user
-        self.__pwd = pwd
+    def __init__(self):
         self.__driver = None
         try:
-            self.__driver = GraphDatabase.driver(self.__uri, auth=(self.__user, self.__pwd))
+            self.__driver = GraphDatabase.driver(URI, auth=AUTH)
             self.__driver.verify_connectivity()
-            print("Connected to Neo4j")
+            print("Successful Connection to Database!")
         except Exception as e:
-            print("Failed to create the driver:", e)
-        
+            print(f"Failed to create the driver: {e}")
+    
     def close(self):
         if self.__driver is not None:
             self.__driver.close()
@@ -37,8 +40,7 @@ class Neo4jConnection:
             result = session.run(query, parameters)
             return [record for record in result]
 
-# Création de l'instance de connexion
-neo4j_conn = Neo4jConnection(URI, USERNAME, PASSWORD)
+neo4j_conn = Neo4jConnection()
 
 @app.route('/api/parking/search', methods=['GET'])
 def search_parking():
