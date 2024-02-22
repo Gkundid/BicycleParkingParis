@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bicycle parking search</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <style>
+        #map { height: 400px; width: 100%; }
+        #address, #coordinates { width: 100%; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+
+<h3>Write your address :</h3>
+<input type="text" id="address" placeholder="Example : 189 Boulevard Voltaire, Paris">
+<button id="submitAddress">Search </button>
+
+<h3>Write your coordinates :</h3>
+<input type="text" id="coordinates" placeholder="Example : 48.8566, 2.3522">
+<button id="submitCoordinates">Search </button>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
