@@ -18,14 +18,15 @@ def Create_nodes(csv_file_path):
         with open(csv_file_path, 'r', newline='') as csvfile:
                 reader = csv.DictReader(csvfile)
                 # Parcours des lignes du fichier CSV
-                for row in reader:
-                    # Extraction des libellés et des propriétés
-                    labels = row["Labels"]
-                    properties = {key: value for key, value in row.items() if key != "Labels"}
+                for index, row in enumerate(reader, start=1):
+                    # Extraction des propriétés
+                    properties = {key: value for key, value in row.items()}
+                    # Ajout de la propriété ID et incrémentation
+                    properties["ID"] = index
 
                     # Construction de la requête Cypher avec les propriétés correctement formatées
                     properties_str = "{" + ", ".join([f"{key}: '{value}'" for key, value in properties.items()]) + "}"
-                    query = f"MERGE (p:{labels} {properties_str})"
+                    query = f"MERGE (p:ParkingVelo {properties_str})"
 
                     # Exécution de la requête Cypher
                     summary = driver.execute_query(query, database_="neo4j").summary

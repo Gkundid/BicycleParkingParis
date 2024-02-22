@@ -30,7 +30,7 @@ def save_to_csv(elements, filename='bicycle_parking_paris.csv'):
             lat = element.get('lat')
             lon = element.get('lon')
             capacity = element.get('tags', {}).get('capacity')  # Cherche le champ 'capacity' dans les tags
-            name = f"ParkingVelo{parking_count}"
+            name = "ParkingVelo"
             parking_count += 1
             if lat and lon and capacity:  # Vérifie si tous les champs nécessaires sont présents
                 writer.writerow([name, lat, lon, capacity])
